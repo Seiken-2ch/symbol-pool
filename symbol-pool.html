@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style type="text/css">
+        #pool{display: none;}
+        #content div{font-size: 20px; width: 40px; text-align: center; font-family: "DejaVu Sans"; display: inline-block;}
+        #content .symbol-id, #content .symbol-name{font-size: 9px; font-family: "新細明體";}
+    </style>
+    <script>
+        //IE8 functions
+        if (!Array.prototype.indexOf) {
+          Array.prototype.indexOf = function (obj, fromIndex) {
+            if (fromIndex == null) {
+                fromIndex = 0;
+            } else if (fromIndex < 0) {
+                fromIndex = Math.max(0, this.length + fromIndex);
+            }
+            for (var i = fromIndex, j = this.length; i < j; i++) {
+                if (this[i] === obj)
+                    return i;
+            }
+            return -1;
+          };
+        }
+        if(!document.getElementsByClassName){
+            document.getElementsByClassName = function(className, element){
+                var children = (element || document).getElementsByTagName('*');
+                var elements = new Array();
+                for (var i=0; i<children.length; i++){
+                    var child = children[i];
+                    var classNames = child.className.split(' ');
+                    for (var j=0; j<classNames.length; j++){
+                        if (classNames[j] == className){
+                            elements.push(child);
+                            break;
+                        }
+                    }
+                }
+                return elements;
+            };
+        }
+    
+        //functions
+        function formSymbol(obj, g){
+            var d = document.createElement('div'),
+            d1 = document.createElement('div'),
+            d2 = document.createElement('div');
+            d.innerHTML = obj.innerHTML;
+            d1.className = 'symbol-id';
+            d1.innerHTML = obj.id;
+            d2.className = 'symbol-name';
+            d2.innerHTML = JSON.parse(obj.getAttribute('data-name-zh-tw'))[g];
+            d.appendChild(d1);
+            d.appendChild(d2);
+            return d;
+        }
+        
+        function switchSymbol(){
+            var sw = document.getElementById('cat-switch'),
+            n = sw.options[sw.selectedIndex].value,
+            ct = document.getElementById("content");
+            ct.innerHTML = "";
+            //document.getElementById("Ultra").value;
+            switch(n){
+            case '0':
+                break;
+            default:
+                var ds = document.getElementsByClassName(n);
+                for(var i = 0 ; i < ds.length; i++){
+                    var d = ds[i],
+                    dv = formSymbol(d, n);
+                    ct.appendChild(dv);
+                }
+                break;
+            }
+        };
+        window.onload = function(){
+            var cl = [],
+            sw = document.getElementById('cat-switch'),
+            ds = document.getElementById('pool').getElementsByTagName('div');
+            for(var i = ds.length - 1 ; i >= 0; i--){
+                var d = ds[i];
+                var cs = d.className.split(' ');
+                for(var ii = cs.length - 1 ; ii >= 0; ii--){
+                    var c = cs[ii];
+                    if(cl.indexOf(c)==-1 && c!=''){
+                        cl.push(c);
+                    }
+                }
+            }
+            for(var i = cl.length - 1 ; i >= 0; i--){
+                var c = cl[i],
+                o = document.createElement('option');
+                o.value = c;
+                o.innerHTML = c;
+                sw.appendChild(o);
+            }
+            
+        };
+    </script>
+
+
+
+
+</head>
+<body>
+<select id="cat-switch" onchange="switchSymbol();">
+    <option value="0">empty...</option>
+</select>
+<div id="content"></div>
+<div id="pool">
+    <div id="U00ac" class="logic" data-name-zh-tw='{"logic":"非"}'>¬</div>
+    <div id="U2192" class="arrow logic" data-name-zh-tw='{"arrow":"右", "logic":"蘊含"}'>→</div>
+    <div id="U2194" class="arrow logic" data-name-zh-tw='{"arrow":"雙箭頭", "logic":"若且唯若"}'>↔</div>
+    <div id="U2200" class="logic" data-name-zh-tw='{"logic":"所有的"}'>∀</div>
+    <div id="U2203" class="logic" data-name-zh-tw='{"logic":"存在"}'>∃</div>
+    <div id="U2208" class="logic" data-name-zh-tw='{"logic":"屬於"}'>∈</div>
+    <div id="U2227" class="logic" data-name-zh-tw='{"logic":"且"}'>∧</div>
+    <div id="U2228" class="logic" data-name-zh-tw='{"logic":"或"}'>∨</div>
+    <div id="U2229" class="logic" data-name-zh-tw='{"logic":"交集"}'>∩</div>
+    <div id="U222a" class="logic" data-name-zh-tw='{"logic":"聯集"}'>∪</div>
+    <div id="U2287" class="logic" data-name-zh-tw='{"logic":"包含"}'>⊇</div>
+    <div id="U2295" class="logic" data-name-zh-tw='{"logic":"異或"}'>⊕</div>
+</div>
+</body>
+</html> 
